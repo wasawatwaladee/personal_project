@@ -1,3 +1,4 @@
+import { tr } from "zod/locales"
 import prisma from "../config/prisma.config.js"
 import { createProd, deleteProd, getProd, getProdById, sortProd, updateProd } from "../services/product.service.js"
 
@@ -77,20 +78,83 @@ export const listByProduct = async(req,res)=>{
         res.status(500).json({message:"Server error"})
     }
 }
+
+const hdlQuery=async(req,res,query)=>{
+    try {
+        const product = await prisma.product.findMany({
+            where:{
+                title:{
+                    contains:query
+                }
+            },
+            include:{
+                category:true,
+                images:true
+            }
+        })
+        res.json({product})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message:"Search error"})
+    }
+}
+
+const hdlPrice = async(req,res,priceRange)=>{
+    try {
+        const product = await prisma.product.findMany({
+            where:{
+                price:{
+                    gte:priceRange[0],
+                    lte:priceRange[1]
+                }
+            },
+            include:{
+                category:true,
+                images:true
+            }
+
+        })
+        res.json({product})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message:"Server error"})
+    }
+}
+
+const hdlCategory = async(req,res,categoryId)=>{
+    try {
+        const product = await prisma.product.findMany({
+            where:{
+                categoryId:{
+                    in:categoryId.map((id)=>Number(id))
+                }
+            },
+            include:{
+                category:true,
+                images:true
+            }
+        })
+        res.json({product})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message:"Server error"})
+    }
+   
+}
 export const searchFilters = async(req,res)=>{
     try {
         const {query,category,price} = req.body
         if(query){
-            console.log('query', query)
+            await hdlQuery(req,res,query)
         }
         if(category){
-            console.log('category', category)
+            await hdlCategory(req,res,category)
         }
         if(price){
-            console.log('price', price)
+            await hdlPrice(req,res,price)
         }
-        res.send('search filters ok')
-    } catch (error) {
+        
+    } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server error"}) 
     }
