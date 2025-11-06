@@ -9,6 +9,7 @@ import { errorMiddleware } from './middlewares/error.middleware.js';
 import categoryRoute from './routes/category.route.js';
 import productRoute from './routes/product.route.js';
 import userRoute from './routes/user.route.js';
+import adminRoute from './routes/admin.route.js';
 
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/auth',authRoute);
 app.use('/api',categoryRoute);
 app.use('/api',productRoute)
 app.use('/api',userRoute)
+app.use('/api',adminRoute)
 
 //Middleware
 app.use(notFoundMiddleware);
