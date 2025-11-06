@@ -17,7 +17,9 @@ export const authCheck = async(req,res,next)=>{
         const user = await prisma.user.findUnique({
             where:{id:req.userId}
         })
+        console.log('payload', payload)
         console.log('user',user)
+        // console.log('req.user', req.user)
         
         if(!user.enabled){
             next(createHttpError[400]('This account cannot access'))
@@ -26,5 +28,23 @@ export const authCheck = async(req,res,next)=>{
     } catch (err) {
         console.log(err)
        next(createHttpError[500]('Token invalid')) 
+    }
+}
+
+export const adminCheck = async(req,res,next)=>{
+    try {
+        const id = req.userId 
+        console.log('id', id)
+        const adminUser = await prisma.user.findFirst({
+            where:{id}
+        })
+        if(!adminUser || adminUser.role !== 'admin'){
+            return next(createHttpError[403]("Access denied:Admin only"))
+        }
+        // console.log('admincheck', adminUser)
+        next()
+    } catch (err) {
+        console.log(err)
+        throw createHttpError(500,"Admin access denied")
     }
 }
