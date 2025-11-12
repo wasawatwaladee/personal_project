@@ -16,7 +16,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(rateLimit({
     windowMs:3*60*1000,  
-    max:100
+    max:1000
 }));
 app.use(helmet());
 app.use(cors());
@@ -27,7 +27,7 @@ app.get('/',(req,res)=>{
     res.send("Hello from homepage");
 })
 //Routes
-app.use('/api/auth',authRoute);
+app.use('/api',authRoute);
 app.use('/api',categoryRoute);
 app.use('/api',productRoute)
 app.use('/api',userRoute)

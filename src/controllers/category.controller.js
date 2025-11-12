@@ -3,6 +3,7 @@ import { createCate, getCategory, removeCate } from "../services/category.servic
 
 export const createCategory =async(req,res)=>{
     const {name} = req.body
+    
     console.log('name from controller', name)
     try {
        const category = await createCate(name)
@@ -16,7 +17,7 @@ export const listCategory =async(req,res)=>{
     
     try {
        const category = await getCategory()
-       res.json({category})
+       res.json(category)
     } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server error"})

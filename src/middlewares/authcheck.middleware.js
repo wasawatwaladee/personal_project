@@ -8,17 +8,19 @@ export const authCheck = async(req,res,next)=>{
         throw  createHttpError(401,"Invalid credentials")   
     }
     const token = authHeader.split(" ")[1];
+    
 
     try {
         const payload = verifyUserToken(token)
-        console.log('payload from authcheck', payload)
+        // console.log('payload from authcheck', payload)
         req.userId = payload.userId
+        // console.log('payload', payload)
         
         const user = await prisma.user.findUnique({
             where:{id:req.userId}
         })
-        console.log('payload', payload)
-        console.log('user',user)
+        // console.log('payload', payload)
+        // console.log('user',user)
         // console.log('req.user', req.user)
         
         if(!user.enabled){
@@ -34,7 +36,7 @@ export const authCheck = async(req,res,next)=>{
 export const adminCheck = async(req,res,next)=>{
     try {
         const id = req.userId 
-        console.log('id', id)
+        // console.log('id', id)
         const adminUser = await prisma.user.findFirst({
             where:{id}
         })

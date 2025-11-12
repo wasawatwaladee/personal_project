@@ -5,8 +5,8 @@ import { createProduct, listByProduct, listProduct, listProductById, removeProdu
 const productRoute = Router();
 
 productRoute.post('/product',createProduct)
-productRoute.get('/products/:count',listProduct)
-productRoute.get('/product/:id',listProductById)
+productRoute.get('/products/:count',listProduct) //
+productRoute.get('/product/:id',listProductById) //
 productRoute.put('/product/:id',updateProduct)
 productRoute.delete('/product/:id',removeProduct)
 productRoute.post('/productby',listByProduct)

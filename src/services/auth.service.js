@@ -17,14 +17,18 @@ export const createUser = async(user)=>{
 }
 
 export const verifyBy = async(data,identityKey)=>{
-    const versifyUser = await prisma.user.findFirst({
+    
+    console.log('data.identity', data.identity)
+    console.log('identityKey', identityKey)
+    const verifyUser = await prisma.user.findFirst({
         where:{[identityKey]:data.identity}
     })
     console.log("data from verifyBy",data)
+    console.log('verifyUser from prisma', verifyUser)
     // console.log("data.password from verifyBy",data.password)
     // console.log("user.password from verifyBy",user.password)
-    if(!versifyUser) return null;
-    const isMatch = await bcrypt.compare(data.password,versifyUser.password)
-    return isMatch?versifyUser:null
+    if(!verifyUser) return null;
+    const isMatch = await bcrypt.compare(data.password,verifyUser.password)
+    return isMatch?verifyUser:null
 
 }

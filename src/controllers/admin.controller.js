@@ -15,7 +15,6 @@ export const changeOrderStatus = async(req,res,next)=>{
         return next(createHttpError[500]('Server error'))
     }
 }
-
 export const getOrderAdmin=async(req,res,next)=>{
     try {
         const orders = await prisma.order.findMany({

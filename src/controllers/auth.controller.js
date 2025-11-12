@@ -2,6 +2,7 @@ import createHttpError from "http-errors";
 import { loginSchema, registerSchema } from "../validations/schema.js"
 import { createUser, getUserBy, verifyBy,  } from "../services/auth.service.js";
 import { generateUserToken } from "../utils/jwt.util.js";
+import prisma from "../config/prisma.config.js";
 
 
 export const register = async(req, res,next) => {
@@ -35,24 +36,18 @@ export const login = async(req,res,next)=>{
     const user = loginSchema.parse(req.body)
     const identityKey = user.email ? 'email' : 'mobile'
     
-    console.log('user', user)
-    //check user
-    // const loginUser = await getUserBy(identityKey,identity);
-    // if(!loginUser){
-    //     return next(createHttpError[404]('User not found'));
-    // }
+    console.log('user from loginSchema', user)
     
-    //Password checked
     const verifyUser = await verifyBy(user,identityKey);
+    console.log('verifyUser from controller', verifyUser)
     if(!verifyUser || !verifyUser.enabled){
         return next(createHttpError[404]('User not found'));
     }
     
     //Create Token
     const token = generateUserToken(verifyUser.id);
-
-    console.log('user from login', user);
-    console.log('verifyUser', verifyUser)
+    // console.log('token', token)
+    
     res.json({
         verifyUser,
         token
@@ -61,14 +56,38 @@ export const login = async(req,res,next)=>{
 
 export const currentUser = async(req,res,next)=>{
     try {
-        res.send("Current User ok")
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({
-            message:"Server error"
-        })
+        const id = req.userId
+        // console.log('id', id)
+        const user = await prisma.user.findFirst({
+            where:{id},
+            select:{
+            id:true,
+            firstName:true,
+            lastName:true,
+            role:true
+        }
+        }
+        
+    )
+    if (!user) {
+      return next(createHttpError(404, "User not found"));
     }
-}
+
+    res.status(200).json({
+      success: true,
+      message: "User verified",
+      user,
+    });
+
+    } 
+    catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 
 
 
