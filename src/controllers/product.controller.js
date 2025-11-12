@@ -14,11 +14,22 @@ export const createProduct = async(req,res)=>{
     }
 }
 
+// export const listProduct = async(req,res)=>{
+//     try {
+//         const {count} = req.params  
+//         const product = await getProd(count)  
+//         res.json(product)
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).json({message:"Server error"})
+//     }
+// }
+
 export const listProduct = async(req,res)=>{
     try {
-        const {count} = req.params  
-        const product = await getProd(count)  
-        res.json({product})
+       
+        const product = await getProd()  
+        res.json(product)
     } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server error"})
@@ -157,5 +168,22 @@ export const searchFilters = async(req,res)=>{
     } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server error"}) 
+    }
+}
+
+export const createImages = async(req,res)=>{
+    try {
+        res.send("Hello createImages")
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message:"Server Error"})
+    }
+}
+export const removeImage = async(req,res)=>{
+    try {
+        res.send("Hello removeImage")
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message:"Server Error"})
     }
 }

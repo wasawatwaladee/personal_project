@@ -22,9 +22,20 @@ export const createProd = async(data)=>{
     return product
 }
 
-export const getProd = async(count)=>{
+// export const getProd = async(count)=>{
+//     const product = await prisma.product.findMany({
+//         take:Number(count),
+//         orderBy:{createdAt:"desc"},
+//         include:{
+//             category:true,
+//             images:true
+//         }
+//     })
+//     return product
+// }
+export const getProd = async()=>{
     const product = await prisma.product.findMany({
-        take:Number(count),
+        
         orderBy:{createdAt:"desc"},
         include:{
             category:true,

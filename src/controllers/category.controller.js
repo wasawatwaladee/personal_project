@@ -4,7 +4,7 @@ import { createCate, getCategory, removeCate } from "../services/category.servic
 export const createCategory =async(req,res)=>{
     const {name} = req.body
     
-    console.log('name from controller', name)
+    // console.log('name from controller', name)
     try {
        const category = await createCate(name)
        res.json({category})
