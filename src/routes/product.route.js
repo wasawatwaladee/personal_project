@@ -14,7 +14,7 @@ productRoute.delete('/product/:id',removeProduct)
 productRoute.post('/productby',listByProduct)
 productRoute.post('/search/filters',searchFilters)
 
-productRoute.post('/images',authCheck,adminCheck,createImages)
+productRoute.post('/images/',authCheck,adminCheck,createImages)
 productRoute.post('/removeimages',authCheck,adminCheck,removeImage)
 
 export default productRoute;

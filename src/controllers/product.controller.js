@@ -1,6 +1,8 @@
 import { tr } from "zod/locales"
 import prisma from "../config/prisma.config.js"
 import { createProd, deleteProd, getProd, getProdById, sortProd, updateProd } from "../services/product.service.js"
+import { v2 as cloudinary } from 'cloudinary';
+
 
 export const createProduct = async(req,res)=>{
     try {
@@ -171,9 +173,27 @@ export const searchFilters = async(req,res)=>{
     }
 }
 
+
+cloudinary.config({
+     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+
+
 export const createImages = async(req,res)=>{
+
+    // console.log('req.body', req.body)
     try {
-        res.send("Hello createImages")
+        const result = await cloudinary.uploader.upload(req.body.images,{
+            public_id: `${Date.now()}`,
+            resource_type:'auto',
+            folder:'Personal_project'
+        })
+        res.json({result})
+        // res.send(result)
+        // res.send('test createImage')
     } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server Error"})
@@ -181,7 +201,12 @@ export const createImages = async(req,res)=>{
 }
 export const removeImage = async(req,res)=>{
     try {
-        res.send("Hello removeImage")
+        // console.log(req.body.public_id)
+        const {public_id} = req.body
+        cloudinary.uploader.destroy(public_id,(result)=>{
+
+            res.send(result)
+        })
     } catch (err) {
         console.log(err)
         res.status(500).json({message:"Server Error"})
