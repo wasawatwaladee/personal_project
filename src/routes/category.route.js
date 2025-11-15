@@ -5,7 +5,7 @@ import { adminCheck, authCheck } from '../middlewares/authcheck.middleware.js';
 const categoryRoute = Router();
 
 categoryRoute.post('/category',authCheck,adminCheck,createCategory)
-categoryRoute.get('/category',authCheck,adminCheck,listCategory)
+categoryRoute.get('/category',listCategory)
 categoryRoute.delete('/category/:id',authCheck,adminCheck,removeCategory)
 
 
