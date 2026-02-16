@@ -108,7 +108,7 @@ export const userCart = async(req,res,next)=>{
         })
         console.log('newCart', newCart)
 
-        res.json("Test userCart pass")
+        res.json(newCart)
     } catch (err) {
         console.log(err)
         throw next(createHttpError[500]("Server error"))

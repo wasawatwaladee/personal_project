@@ -1,26 +1,55 @@
 import { tr } from "zod/locales"
 import prisma from "../config/prisma.config.js"
 
-export const createProd = async(data)=>{
+// export const createProd = async(data)=>{
+//     const product = await prisma.product.create({
+//         data:{
+//             title:data.title,
+//             description:data.description,
+//             price:Number(data.price),
+//             quantity:Number(data.quantity),
+//             categoryId:Number(data.categoryId),
+//             images:{
+//                 create:data.images.map(item=>({
+//                 asset_id : item.asset_id,
+//                 public_id : item.public_id,
+//                 url       : item.url,
+//                 secure_url :item.secure_url  
+//                 }))
+//             }
+//         }
+//     })
+//     return product
+// }
+
+export const createProd = async(data) => {
+    // เตรียมข้อมูลพื้นฐาน
+    const productData = {
+        title: data.title,
+        description: data.description,
+        price: Number(data.price),
+        quantity: Number(data.quantity),
+        categoryId: Number(data.categoryId),
+    };
+
+    // เช็คว่ามีรูปภาพถูกส่งมาไหม และมีจำนวนมากกว่า 0 หรือไม่
+    if (data.images && data.images.length > 0) {
+        productData.images = {
+            create: data.images.map(item => ({
+                asset_id: item.asset_id,
+                public_id: item.public_id,
+                url: item.url,
+                secure_url: item.secure_url
+            }))
+        };
+    }
+
     const product = await prisma.product.create({
-        data:{
-            title:data.title,
-            description:data.description,
-            price:Number(data.price),
-            quantity:Number(data.quantity),
-            categoryId:Number(data.categoryId),
-            images:{
-                create:data.images.map(item=>({
-                asset_id : item.asset_id,
-                public_id : item.public_id,
-                url       : item.url,
-                secure_url :item.secure_url  
-                }))
-            }
-        }
-    })
-    return product
-}
+        data: productData
+    });
+    
+    return product;
+};
 
 // export const getProd = async(count)=>{
 //     const product = await prisma.product.findMany({
@@ -35,7 +64,7 @@ export const createProd = async(data)=>{
 // }
 export const getProd = async()=>{
     const product = await prisma.product.findMany({
-        
+        where:{isActive:true},
         orderBy:{createdAt:"desc"},
         include:{
             category:true,
@@ -55,12 +84,25 @@ export const getProdById = async(id)=>{
     return product
 }
 
+// export const deleteProd= async(id)=>{
+//     const product = await prisma.product.delete({
+//         where:{id:Number(id)}
+//     })
+//     return product
+// }
+
+    
 export const deleteProd= async(id)=>{
-    const product = await prisma.product.delete({
-        where:{id:Number(id)}
+    const product = await prisma.product.update({
+        where:{id:Number(id)},
+        data:{
+            isActive:false
+        }
     })
     return product
 }
+
+
 
 export const updateProd= async(id,data)=>{
     const product = await prisma.product.update({

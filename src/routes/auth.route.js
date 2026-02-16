@@ -7,8 +7,6 @@ const authRoute = Router();
 //Routes
 authRoute.post('/register', register)
 authRoute.post('/login', login)
-// authRoute.post('/me', authenMiddleware,me)
-
 authRoute.post('/current-user',authCheck,currentUser)
 authRoute.post('/current-admin',authCheck,adminCheck,currentUser)
 

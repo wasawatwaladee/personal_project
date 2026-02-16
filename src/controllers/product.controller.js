@@ -85,7 +85,7 @@ export const removeProduct = async(req,res)=>{
     try {
         const {id} = req.params
         console.log('id from remove', id)
-        //ลบรูปภาพใน cloudinary
+        
         //step 1 หาสินค้าในฐานข้อมูล include images
         const product = await prisma.product.findFirst({
             where:{id:Number(id)},
@@ -114,10 +114,11 @@ export const removeProduct = async(req,res)=>{
 
         //step3 ลบสินค้าออกจาก db
         const newProduct = await deleteProd(id)
+       
         res.json({message:`Delete success`,newProduct})
     } catch (err) {
         console.log(err)
-        res.status(500).json({message:"Server error"})
+        res.status(500).json({message:"error deleteProd server"})
     }
 }
 export const listByProduct = async(req,res)=>{
